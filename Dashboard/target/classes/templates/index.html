@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Super Dashboard</title>
+
+
+</head>
+
+<body>
+
+
+	<h1>Super Dashboard</h1>
+	<select th:each="sistema : ${sistemas}">
+		<option
+				th:value="${sistema.nombre_sistema}"
+				th:text="${sistema.nomenclatura}"/>
+		</option>
+	</select>
+
+
+
+</body>
+</html>
