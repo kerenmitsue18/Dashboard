@@ -14,7 +14,7 @@ public class SistemaRestController {
     @Autowired
     private SistemaServiceAPI sistemaServiceAPI;
 
-    @GetMapping(value = "/dash")
+    @GetMapping(value = "/sistema")
     public List<Sistema> getAll() {
         return sistemaServiceAPI.getAll();
     }
