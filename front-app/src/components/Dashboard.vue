@@ -25,12 +25,31 @@
 	  		</select>
 	    </div>
 	</div>
-	<div class="col-6">
-	    <h2>Sistema seleccionado:</h2>
-	    {{selectSis}}
-	    <h2>Nodo seleccionado:</h2>
-	    {{selectNod}}
+	<div>
+		<table>
+				<tr>
+					<th>Clave nodo</th>
+					<th>Nombre</th>
+					<th>Zona Distribución</th>
+					<th>Zona Carga</th>
+					<th>Promedio PML Histótico mpx/Wh</th>
+					<th>Congestión</th>
+					<th>Energía</th>
+					<th>Pérdidas</th>
+				</tr>
+				<tr>
+					<td>{{selectNod.clave}}</td>
+					<td>{{selectNod.nombre_nodo}}</td>
+					<td>{{selectNod.id_carga}}</td>
+					<td>{{selectNod.id_distribucion}}</td>
+					<td>Falta dato Promedio</td>
+					<td>Falta dato Congestion</td>
+					<td>Falta dato Energia</td>
+					<td>Falta dato perdidas</td>
+				</tr>
+		</table>
 	</div>
+
 
 
 
@@ -39,8 +58,8 @@
 
 <script>
 	import axios from "axios";
-	import selectSistema from '../service/selectSistema';
-	import selectNodo from '../service/selectNodo';
+	import SeleccionarSistema from '../service/selectSistema';
+	import SeleccionarNodo from '../service/selectNodo';
 
 	export default{
 		name : 'Dashboard',
@@ -52,36 +71,34 @@
 				selectNod: ''		
 			}
 		},
-		selectSistema : null, 
-		selectNodo : null,
+		SeleccionarSistema : null, 
+		SeleccionarNodo : null,
 		watch : {
 			selectSis: function(value){
 				if(value == "Todos"){
-					this.selectNodo.getAll().then(response =>{
+					this.SeleccionarNodo.getAll().then(response =>{
 					this.nodos = response.data;
 				});
 
 				}else{
 					this.selectSis = value;
-					this.selectNodo.getNodosBySistema(this.selectSis.id_sistema).then(response =>{
-						console.log(response.data);
+					this.SeleccionarNodo.getNodosBySistema(this.selectSis.id_sistema).then(response =>{
 					this.nodos = response.data;
 					});
 				}
 				
 			}
-
 		},
 		created(){
-			this.selectSistema = new selectSistema();
-			this.selectNodo = new selectNodo();
+			this.SeleccionarSistema = new SeleccionarSistema();
+			this.SeleccionarNodo = new SeleccionarNodo();
 			
 		}, 
 		mounted(){
-			this.selectSistema.getAll().then(response =>{
+			this.SeleccionarSistema.getAll().then(response =>{
 				this.sistema = response.data;
 			});
-			this.selectNodo.getAll().then(response =>{
+			this.SeleccionarNodo.getAll().then(response =>{
 				this.nodos = response.data;
 			});
 

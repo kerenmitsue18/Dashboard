@@ -29,5 +29,9 @@ public class Nodo {
     @Column(name = "id_sistema", nullable = false)
     private int id_sistema;
 
+    @Column(name = "id_carga", nullable = false)
+    private int id_carga;
 
+    @Column(name = "id_distribucion", nullable = false)
+    private int id_distribucion;
 }

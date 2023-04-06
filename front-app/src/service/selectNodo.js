@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 
-export default class selectSistema{
+export default class SeleccionarNodo{
     url = "http://localhost:8080/";
     getAll() { return axios.get(this.url + "nodos");  }
 
