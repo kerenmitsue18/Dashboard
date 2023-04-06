@@ -18,14 +18,12 @@ public class NodoRestController {
 
     @GetMapping(value = "/nodos")
     public List<Nodo> getAll() {
-        return nodoServiceAPI.getAll();
+        return nodoServiceAPI.getNodos();
     }
 
-    @GetMapping(value = "/find/{id}")
-    public Nodo find(@PathVariable Integer id) {
-        return nodoServiceAPI.get(id);
+    @GetMapping(value = "/selected_sistema/{id_sistema}")
+    public List<Nodo> getNodoBySistema(@PathVariable int id_sistema){
+        return nodoServiceAPI.getNodosBySistema(id_sistema);
     }
-
-
 
 }
