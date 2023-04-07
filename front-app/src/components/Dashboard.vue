@@ -40,8 +40,8 @@
 				<tr>
 					<td>{{selectNod.clave}}</td>
 					<td>{{selectNod.nombre_nodo}}</td>
-					<td>{{selectNod.id_carga}}</td>
 					<td>{{selectNod.id_distribucion}}</td>
+					<td>{{carga.zona_carga}}</td>
 					<td>Falta dato Promedio</td>
 					<td>Falta dato Congestion</td>
 					<td>Falta dato Energia</td>
@@ -60,6 +60,7 @@
 	import axios from "axios";
 	import SeleccionarSistema from '../service/selectSistema';
 	import SeleccionarNodo from '../service/selectNodo';
+	import SeleccionarCarga from '../service/selectCarga';
 
 	export default{
 		name : 'Dashboard',
@@ -68,11 +69,14 @@
 				sistema: undefined,
 				nodos: undefined,
 				selectSis : '', 
-				selectNod: ''		
+				selectNod: '',
+				carga : ''		
 			}
 		},
 		SeleccionarSistema : null, 
 		SeleccionarNodo : null,
+		SeleccionarCarga: null,
+
 		watch : {
 			selectSis: function(value){
 				if(value == "Todos"){
@@ -83,15 +87,23 @@
 				}else{
 					this.selectSis = value;
 					this.SeleccionarNodo.getNodosBySistema(this.selectSis.id_sistema).then(response =>{
-					this.nodos = response.data;
+						this.nodos = response.data;
 					});
 				}
 				
+			},
+			selectNod: function(value){
+				this.selectNod = value;
+				this.SeleccionarCarga = new SeleccionarCarga();
+				this.SeleccionarCarga.getCarga(this.selectNod.id_carga).then(response =>{
+					this.carga = response.data;
+				});
 			}
 		},
 		created(){
 			this.SeleccionarSistema = new SeleccionarSistema();
 			this.SeleccionarNodo = new SeleccionarNodo();
+
 			
 		}, 
 		mounted(){
