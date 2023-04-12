@@ -26,6 +26,7 @@
 	    </div>
 	</div>
 	<div>
+		<br>
 		<table>
 				<tr>
 					<th>Clave nodo</th>
@@ -40,19 +41,15 @@
 				<tr>
 					<td>{{selectNod.clave}}</td>
 					<td>{{selectNod.nombre_nodo}}</td>
-					<td>{{selectNod.id_distribucion}}</td>
+					<td>{{distribucion.zona_distribucion}}</td>
 					<td>{{carga.zona_carga}}</td>
-					<td>Falta dato Promedio</td>
-					<td>Falta dato Congestion</td>
-					<td>Falta dato Energia</td>
-					<td>Falta dato perdidas</td>
+					<td>{{promedios.precio_marginal}}</td>
+					<td>{{promedios.comp_congestion}}</td>
+					<td>{{promedios.comp_energia}}</td>
+					<td>{{promedios.comp_perdidas}}</td>
 				</tr>
 		</table>
 	</div>
-
-
-
-
 </template>
 
 
@@ -60,7 +57,6 @@
 	import axios from "axios";
 	import SeleccionarSistema from '../service/selectSistema';
 	import SeleccionarNodo from '../service/selectNodo';
-	import SeleccionarCarga from '../service/selectCarga';
 
 	export default{
 		name : 'Dashboard',
@@ -70,12 +66,14 @@
 				nodos: undefined,
 				selectSis : '', 
 				selectNod: '',
-				carga : ''		
+				carga : '',
+				distribucion: '',
+				promedios: ''
 			}
 		},
+
 		SeleccionarSistema : null, 
 		SeleccionarNodo : null,
-		SeleccionarCarga: null,
 
 		watch : {
 			selectSis: function(value){
@@ -93,18 +91,19 @@
 				
 			},
 			selectNod: function(value){
-				this.selectNod = value;
-				this.SeleccionarCarga = new SeleccionarCarga();
-				this.SeleccionarCarga.getCarga(this.selectNod.id_carga).then(response =>{
-					this.carga = response.data;
+				this.selectNod = value; 
+				this.carga = this.selectNod.carga;
+				this.distribucion = this.selectNod.distribucion;
+
+				this.SeleccionarNodo.getPromedios(this.selectNod.id_nodo).then(response =>{
+					//this.promedios = response.data;
+					console.log(response.data);
 				});
 			}
 		},
 		created(){
 			this.SeleccionarSistema = new SeleccionarSistema();
 			this.SeleccionarNodo = new SeleccionarNodo();
-
-			
 		}, 
 		mounted(){
 			this.SeleccionarSistema.getAll().then(response =>{

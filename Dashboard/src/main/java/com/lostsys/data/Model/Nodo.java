@@ -26,12 +26,17 @@ public class Nodo {
     @Column(name = "latitud", nullable = false)
     private float latitud;
 
-    @Column(name = "id_sistema", nullable = false)
-    private int id_sistema;
+    @ManyToOne
+    @JoinColumn(name = "id_carga")
+    Carga carga;
 
-    @Column(name = "id_carga", nullable = false)
-    private int id_carga;
+    @ManyToOne
+    @JoinColumn(name = "id_distribucion")
+    Distribucion distribucion;
 
-    @Column(name = "id_distribucion", nullable = false)
-    private int id_distribucion;
+    @ManyToOne
+    @JoinColumn(name = "id_sistema")
+    Sistema sistema;
+
+
 }

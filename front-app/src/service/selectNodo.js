@@ -8,4 +8,8 @@ export default class SeleccionarNodo{
     getNodosBySistema(id_sistema){ 
         return axios.get(this.url + "selected_sistema/"+ id_sistema);  
     }
+
+    getPromedios(id_nodo){
+        return axios.get(this.url + "promedios/"+ id_nodo); 
+    }
 }
