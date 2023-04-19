@@ -16,7 +16,6 @@ public class PmlServiceAPI {
     public PML getPromedios(int id_nodo){
         List<Object[]> list = pmlReposity.getPromedio(id_nodo);
         PML pml = new PML();
-        //este es un nuevo comentario sincronizado v2
         list.stream().forEach( (record) -> {
             pml.setPrecio_marginal((Double) record[0]);
                     pml.setComp_energia((Double) record[1]);
