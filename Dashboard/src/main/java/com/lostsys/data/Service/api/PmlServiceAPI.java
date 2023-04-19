@@ -23,7 +23,6 @@ public class PmlServiceAPI {
                     pml.setComp_perdidas((Double) record[2]);
                     pml.setComp_congestion( (Double) record[3]);
                 });
-        System.out.println(pml);
         return pml;
 
     }
