@@ -96,8 +96,8 @@
 				this.distribucion = this.selectNod.distribucion;
 
 				this.SeleccionarNodo.getPromedios(this.selectNod.id_nodo).then(response =>{
-					//this.promedios = response.data;
-					console.log(response.data);
+					this.promedios = response.data;
+					
 				});
 			}
 		},
