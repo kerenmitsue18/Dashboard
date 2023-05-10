@@ -12,4 +12,6 @@ export default class SeleccionarNodo{
     getPromedios(id_nodo){
         return axios.get(this.url + "promedios/"+ id_nodo); 
     }
+
+    
 }

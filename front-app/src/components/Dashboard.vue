@@ -51,7 +51,6 @@
 		</table>
 	</div>
 
-
 </template>
 
 <script>
@@ -69,10 +68,9 @@
 				selectNod: '',
 				carga : '',
 				distribucion: '',
-				promedios: ''
+				promedios: '',
 			}
 		},
-
 		SeleccionarSistema : null, 
 		SeleccionarNodo : null,
 
@@ -106,93 +104,12 @@
 			this.SeleccionarSistema = new SeleccionarSistema();
 			this.SeleccionarNodo = new SeleccionarNodo();
 		}, 
+
 		mounted(){
 			this.SeleccionarSistema.getAll().then(response =>{
-				this.sistema = response.data;
-			});
+				this.sistema = response.data;  			});
 			this.SeleccionarNodo.getAll().then(response =>{
-				this.nodos = response.data;
-			});
-
-		}
-	}
-
-	//  *******************SECCIONES DE GRAFICAS *****************************// 
-
-	ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "b55b025e438fa8a98e32482b5f768ff5"];
-    let chartData = [69, 68, 54, 48, 70, 74, 98, 70, 72, 68, 49, 69];
-
-    let chartConfig = {
-
-      graphset: [{
-      type: 'scatter',
-      width: '60%',
-      height: '50%',
-      x: '30%',
-      y: '35.2%',
-      plot: {
-        tooltip: {
-          text: 'Hora del día: %k2 \n Prom.Precio Marginal Local: %kl',
-          fontSize: '10px',
-          thousandsSeparator: ',',
-        },
-        
-      },
-      plotarea: {
-        margin: '30px 25px 60px 46px',
-      },
-      scaleY: {
-        label: {
-          text: 'Prom. PML ++ ($MWh)',
-        },
-        values: '0:100:25',
-        guide: {
-          alpha: 0.6,
-          lineColor: '#d2dae2',
-          lineStyle: 'solid',
-          lineWidth: '1px',
-        },
-        lineColor: 'none',
-          tick: { visible: false,  },
-      },
-      scaleX: {
-            values: '0:24:1',
-            guide: { visible: false, },
-          },
-      series: [{
-          values: chartData,
-          legendItem: {
-            visible: false,
-          },
-          legendMarker: {
-            visible: false,
-          },
-        },
-      ],
-      },],
-    };
-
-    zingchart.render({
-      id: 'myChart',
-      data: chartConfig,
-      height: '100%',
-      width: '100%',
-    });
-
-
+			this.nodos = response.data; });
+		},
+}
 </script>
-
-<style>
-
-	.chart--container {
-      min-height: 530px;
-      width: 100%;
-      height: 100%;
-      background: lightgray;
-
-    }
-
-    .zc-ref {
-      display: none;
-    }
-</style>
