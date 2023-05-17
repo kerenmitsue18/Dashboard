@@ -74,22 +74,24 @@
 		SeleccionarSistema : null, 
 		SeleccionarNodo : null,
 
-		watch : {
-			selectSis: function(value){
-				if(value == "Todos"){
-					this.SeleccionarNodo.getAll().then(response =>{
-					this.nodos = response.data;
-				});
+		watch: {
+			selectSis: function (value) {
+				if (value == "Todos") {
+                    this.$emitter.emit('cambio-sistema', { valor: value }); //escuchar evento si se selecciona todos los sistemas 
+                    this.SeleccionarNodo.getAll().then(response => {
+                        this.nodos = response.data;
+                    });
 
-				}else{
-					this.selectSis = value;
-					this.SeleccionarNodo.getNodosBySistema(this.selectSis.id_sistema).then(response =>{
-						this.nodos = response.data;
-					});
-				}
-				
+                } else {
+                    this.selectSis = value;
+                    this.SeleccionarNodo.getNodosBySistema(this.selectSis.id_sistema).then(response => {
+                        this.nodos = response.data;
+                    });
+                }
+
 			},
-			selectNod: function(value){
+			selectNod: function (value) {
+                this.$emitter.emit('cambio-nodo', { valor: value.id_nodo }); //para que otro componente escuche el evento
 				this.selectNod = value; 
 				this.carga = this.selectNod.carga;
 				this.distribucion = this.selectNod.distribucion;
@@ -99,7 +101,7 @@
 					
 				});
 			}
-		},
+		}, 
 		created(){
 			this.SeleccionarSistema = new SeleccionarSistema();
 			this.SeleccionarNodo = new SeleccionarNodo();
