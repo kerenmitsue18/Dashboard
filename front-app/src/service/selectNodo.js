@@ -12,4 +12,12 @@ export default class SeleccionarNodo{
     getPromedios(id_nodo){
         return axios.get(this.url + "promedios/"+ id_nodo); 
     }
+
+    async getMinFecha(){
+        return axios.get(this.url + "minfecha"); 
+    }
+
+    async getMaxFecha(){
+        return axios.get(this.url + "maxfecha"); 
+    }
 }
