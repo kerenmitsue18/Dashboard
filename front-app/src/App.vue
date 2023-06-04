@@ -2,7 +2,7 @@
     <Dashboard />
     <br>
     <br>
-    <Graph_promedios></Graph_promedios>
+    <Graph_promedios />
 </template>
 
 <script>
