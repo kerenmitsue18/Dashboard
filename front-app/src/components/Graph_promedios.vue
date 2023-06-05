@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!isLoading">
+    <div v-if="!isLoading && !isLoadingDash">
         <div id="myChart"></div>
         <p>{{ nodo }}</p>
 
@@ -15,11 +15,13 @@ export default {
     data() {
         return {
             isLoading: true,
+            isLoadingDash : true,
             values: null,
             nodo: null,
-            minFecha: null,
-            maxFecha: null,
+            minFecha: '',
+            maxFecha: '',
             sistema: null,
+            fechas: null,
             chartData: {
                 type: 'scatter',
                 width: '80%',
@@ -28,7 +30,7 @@ export default {
                 //y: '10%',
                 plot: {
                     tooltip: {
-                        text: "Hora del d�a: %kt \n  Prom.Precio Marginal Local: %v",
+                        text: "Hora del d�a: %kt \n  Prom.Precio Marginal Local: %v",
                         fontSize: '10px',
                         thousandsSeparator: ',',
                     },
@@ -78,16 +80,17 @@ export default {
         })
         this.$emitter.on('cambio-sistema', (evt) => {
             this.sistema = evt.valor;
-            console.log("aqui");
             this.updateChartData();
         })
-        this.$emitter.on('cambio-minFecha', (evt) => {
-            this.minFecha = evt.valor;
+        this.$emitter.on('cambio-fecha', (evt) => {
+            this.isLoading = true;
+            this.minFecha = evt.valor[0];
+            this.maxFecha = evt.valor[1];
             this.updateChartData();
         })
-        this.$emitter.on('cambio-maxFecha', (evt) => {
-            this.maxFecha = evt.valor;
-            this.updateChartData();
+        this.$emitter.on('cambio-cargarDatos', (evt) => {
+            this.isLoadingDash = evt.valor;
+           
         })
         },
 
@@ -102,13 +105,11 @@ export default {
             this.minFecha = evt.valor;
         })
         this.$emitter.off('cambio-maxFecha', (evt) => {
-            this.minFecha = evt.valor;
+            this.maxFecha = evt.valor;
         })
     },
     mounted() {
 
-    this.maxFecha = "2023-03-14";
-    this.minFecha = "2022-01-01";
     this.updateChartData();
     
     },
@@ -121,22 +122,34 @@ export default {
             width: 600
             })
         },
-        async updateChartData() {
+        getFecha(date){
+            var fecha = new Date(date);
+            var anio = fecha.getFullYear().toString().substr(-2); // Obtiene los últimos dos dígitos del año
+            var mes = ("0" + (fecha.getMonth() + 1)).slice(-2); // Agrega un cero inicial si el mes es menor a 10
+            var dia = ("0" + fecha.getDate()).slice(-2); // Agrega un cero inicial si el día es menor a 10
 
-            if (this.sistema === null || this.sistema === "Todos") {
-                await this.PML.getAllPromedios(this.minFecha, this.maxFecha).then(response => {
+            return anio + "-" + mes + "-" + dia;
+
+        },
+        async updateChartData() {
+            this.isLoading = true;
+            if (this.sistema === "Todos") {
+               this.nodo == null;
+               this.loadCharData();
+            }
+            
+            if(this.nodo === null){
+                await this.PML.getPromByFecha(this.getFecha(this.minFecha),this.getFecha( this.maxFecha)).then(response => {
                     this.values = response.data;
                     this.isLoading = false;
                 });
-            }else{
-                //colocar para que retorne los promedios de cualquier nodo
+                
+                this.chartData.series[0].values = this.values;
+                this.renderChart();
+
             }
-
-               
-
-            this.chartData.series[0].values = this.values;
-            this.renderChart();
-        }, 
+           
+        },
 
         
     }

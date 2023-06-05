@@ -3,8 +3,7 @@
 		<div class="col-6">
 			<div class="form-group">
 			<label>Sistema: </label>
-			<select  v-model="selectSis"
-			placeholder="Sistema">
+			<select v-model="selectSis" placeholder="Sistema">
 					<option disabled value="">Sistema</option>
 					<option value="Todos">Todos</option>
 					<option v-for="sis in sistema" :value="sis">
@@ -17,8 +16,7 @@
 		<div class="col-6">
 			<div class="form-group">
 			<label>Nodos: </label>
-			<select  v-model="selectNod"
-			placeholder="Nodo">
+				<select v-model="selectNod" placeholder="Nodo">
 					<option disabled value="">Nodos</option>
 					<option v-for="nodo in nodos" :value="nodo">
 						{{nodo.id_nodo + " - " + nodo.clave}}
@@ -29,6 +27,8 @@
 		<div >
 			<h3>Range: {{getFecha(value[0])}}, {{ getFecha(value[1]) }}</h3>
 			<Slider  v-model="value" :range="true" :min="minVal" :max="maxVal" :step="stepVal" />
+
+			{{ value }}
 		</div>
 
 		<div>
@@ -44,7 +44,7 @@
 						<th>Energía</th>
 						<th>Pérdidas</th>
 					</tr>
-					<tr>
+					<tr  v-if="!isLoadingInfo">
 						<td>{{selectNod.clave}}</td>
 						<td>{{selectNod.nombre_nodo}}</td>
 						<td>{{distribucion.zona_distribucion}}</td>
@@ -64,6 +64,7 @@
 	import axios from "axios";
 	import SeleccionarSistema from '../service/selectSistema';
 	import SeleccionarNodo from '../service/selectNodo';
+import { getCipherInfo } from "crypto";
 	export default{
 		name : 'Dashboard',
 		SeleccionarSistema : null, 
@@ -71,25 +72,31 @@
 		data(){
 			return{
 				isLoading: true,
+				isLoadingInfo: true,
 				sistema: undefined,
 				nodos: undefined,
+				fechas: undefined,
 				selectSis : '', 
 				selectNod: '',
 				carga : '',
 				distribucion: '',
 				promedios: '',
-				minVal: undefined,
-                maxVal: undefined,
-                value: undefined,
-                stepVal: 86400000,
+				minVal: '',
+				maxVal: '',
+				value: undefined,
+				stepVal: 86400000,
+				
+
 			}
 		},
 		SeleccionarSistema : null, 
 		SeleccionarNodo : null,
 
+
 		watch: {
 			selectSis: function (value) {
 				if (value == "Todos") {
+					this.nodo == null;
                     this.$emitter.emit('cambio-sistema', { valor: value }); //escuchar evento si se selecciona todos los sistemas 
                     this.SeleccionarNodo.getAll().then(response => {
                         this.nodos = response.data;
@@ -116,17 +123,23 @@
                 return value;
             },
 			async getDates() {
-				await this.SeleccionarNodo.getMinFecha().then( response => {
-					this.minVal = new Date(response.data.fecha).getTime();
-				});
 
-				await this.SeleccionarNodo.getMaxFecha().then( response => {
-					this.maxVal = new Date(response.data.fecha).getTime();
+				await this.SeleccionarNodo.getFechas().then( response => {
+					this.fechas = response.data;
+					this.minVal = new Date(this.fechas[0]).getTime();
+					this.maxVal = new Date(this.fechas[1]).getTime();
 				});
-				
-				this.value = [this.minVal, this.maxVal];
+				this.value = [this.minVal, this.maxVal]
 				this.isLoading = false;
-			}
+			},
+
+			async getInfo(){
+				await this.SeleccionarNodo.getPromedios(this.selectNod.id_nodo).then(response =>{
+					this.promedios = response.data;
+					
+				});
+				this.isLoadingInfo = false;
+			},
         },
 		watch : {
 			selectSis: function(value){
@@ -138,16 +151,20 @@
 				}
 			},
 			selectNod: function(value) {
+				this.isLoadingInfo = true;
                 this.$emitter.emit('cambio-nodo', { valor: value.id_nodo }); //para que otro componente escuche el evento
 				this.selectNod = value; 
 				this.carga = this.selectNod.carga;
 				this.distribucion = this.selectNod.distribucion;
-
-				this.SeleccionarNodo.getPromedios(this.selectNod.id_nodo).then(response =>{
-					this.promedios = response.data;
-					
-				});
+				this.getInfo();
+			},
+			value: function(value){
+				this.$emitter.emit('cambio-fecha', { valor: value });
+			},
+			isLoading: function(value){
+				this.$emitter.emit('cambio-cargarDatos', { valor: value });
 			}
+
 		}, 
 		created(){
 			this.SeleccionarSistema = new SeleccionarSistema();

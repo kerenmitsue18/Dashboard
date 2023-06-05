@@ -13,6 +13,7 @@
     "cors": "^2.8.5",
     "mitt": "^3.0.0",
     "primeicons": "^6.0.1",
+    "primevue": "^3.29.2",
     "undefined": "^0.1.0",
     "vue": "^3.2.47",
     "vue-select": "^4.0.0-beta.6",
@@ -45,6 +46,10 @@
       "no-console": "off"
     }
   },
+  "browser": {
+    "crypto": false,
+    "stream": false
+  },
   "browserslist": [
     "> 1%",
     "last 2 versions",
@@ -52,3 +57,4 @@
     "not ie 11"
   ]
 }
+

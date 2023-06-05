@@ -5,8 +5,6 @@ import com.lostsys.data.Reposity.PmlReposity;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
-
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,34 +25,39 @@ public class PmlServiceAPI {
                 });
         return pml;
     }
-    public Date getMaxFecha(){
-        final Date[] fecha = {new Date()};
-        List<Object[]> list = pmlReposity.getMaxFecha();
-        list.stream().forEach( (record) -> { fecha[0] = (Date) record[0]; });
-        System.out.println(fecha[0]);
-        return fecha[0];
+    /*
+    public List<Date> getFechas(){
+        List<Date> fechas = new ArrayList<>();
+        List<Object[]> list = pmlReposity.getFechas();
+        list.stream().forEach( (record) -> {
+            fechas.add((Date) record[0]);
+            fechas.add((Date) record[1]);
+        });
+        return fechas;
+    }
+    */
+    public List<Double> getAllPromByFechas(){
+        List<Double> promedios = new ArrayList<>();
+        List<Object[]> list = pmlReposity.getAllPromByFechas();
+        list.stream().forEach( (record) -> { promedios.add((Double) record[0]); });
+        return promedios;
     }
 
-    public Date getMinFecha(){
-        final Date[] fecha = {new Date()};
-        List<Object[]> list = pmlReposity.getMinFecha();
-        list.stream().forEach( (record) -> { fecha[0] = (Date) record[0]; });
-        return fecha[0];
+
+    public List<Double> getPromByNodo(int idnodo, String minFecha, String maxFecha){
+        List<Double> promedios = new ArrayList<>();
+        List<Object[]> list = pmlReposity.getPromByNodo(idnodo, minFecha,maxFecha);
+        list.stream().forEach( (record) -> { promedios.add((Double) record[0]);  });
+        return promedios;
     }
 
     public List<Double> getAllPromByFechas(String minFecha, String maxFecha){
         List<Double> promedios = new ArrayList<>();
         List<Object[]> list = pmlReposity.getAllPromByFechas(minFecha,maxFecha);
-        list.stream().forEach( (record) -> { promedios.add((Double) record[0]); System.out.println(record[0]); });
+        list.stream().forEach( (record) -> { promedios.add((Double) record[0]);  });
         return promedios;
     }
 
-    public List<Double> getPromByNodo(int idnodo, String minFecha, String maxFecha){
-        List<Double> promedios = new ArrayList<>();
-        List<Object[]> list = pmlReposity.getPromByNodo(idnodo, minFecha,maxFecha);
-        list.stream().forEach( (record) -> { promedios.add((Double) record[0]); System.out.println(record[0]); });
-        return promedios;
-    }
 
 
 }
